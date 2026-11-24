@@ -1,13 +1,16 @@
-name: Open new issue
-on: workflow_dispatch
+on:
+  issues:
+    types: [status_changed]
+
 jobs:
-  open-issue:
+  work-started: 
+    if: >-
+      ${{ github.event.status.category == 'started' &&
+      (github.event.changes.status.from == null ||
+      github.event.changes.status.from.category != 'started') }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      issues: write
     steps:
       - run: |
-          gh issue --repo ${{ github.repository }} \
-            create --title "Issue title" --body "Issue body:
-permissions: read-all
+          echo "Work started on issue #$NUMBER"
+        env:
+          NUMBER: ${{ github.event.issue.number }}
