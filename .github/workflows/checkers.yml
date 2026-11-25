@@ -1,0 +1,25 @@
+name: Checkers
+
+on:
+  pull_request:
+  push:
+  schedule:
+  - cron: '30 12 * * *'
+  workflow_dispatch:
+
+jobs:
+
+  linkcheck:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - run: 'npx linkinator "*.md" --skip "^https://github.com/" --skip "^https://www.npmjs.com/" --skip "^https://thisdavej.com/" --skip "^https://wikipedia.org/"'
+
+  spellcheck:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - uses: tbroadley/spellchecker-cli-action@v1
+      with:
+        dictionaries: '.github/dictionary.txt'
+        files: '*.md'

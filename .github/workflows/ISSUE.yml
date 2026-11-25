@@ -1,0 +1,16 @@
+on:
+  issues:
+    types: [status_changed]
+
+jobs:
+  work-started: 
+    if: >-
+      ${{ github.event.status.category == 'started' &&
+      (github.event.changes.status.from == null ||
+      github.event.changes.status.from.category != 'started') }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Work started on issue #$NUMBER"
+        env:
+          NUMBER: ${{ github.event.issue.number }}
